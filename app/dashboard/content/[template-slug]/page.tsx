@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import FormSection from '../_components/FormSection'
 import OutputSection from '../_components/OutputSection'
 import { TEMPLATE } from '../../_components/TemplateList'
@@ -8,6 +8,12 @@ import { Button } from '@/components/ui/button'
 import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 import { chatSession } from '@/utils/AiModel'
+import { db } from '@/utils/db'
+import { AIOutput } from '@/utils/schema'
+import { useUser } from '@clerk/nextjs'
+import moment from 'moment'
+import { TotalUsageContext } from '@/app/(context)/TotalUsageContext'
+import { useRouter } from 'next/navigation'
 
 interface PROPS {
   params: {
@@ -20,8 +26,17 @@ function CreateNewContent(props: PROPS) {
   const selectedTemplate: TEMPLATE | undefined = Templates?.find((item) => item.slug == props.params['template-slug'])
   const [loading, setLoading] = useState(false);
   const [aiOutput, setAiOutput] = useState<string>('')
+  const {user} = useUser()
+  const router = useRouter()
+  const {totalUsage,setTotalUsage} = useContext(TotalUsageContext)
+
 
   const generateAIContent = async (formData: any) => {
+    if(totalUsage>=10000){
+      console.log("Please Upgrade")
+      router.push('/dashboard/billing')
+      return ;
+    }
     setLoading(true)
     const SelectedPrompt = selectedTemplate?.aiPrompt;
 
@@ -29,9 +44,20 @@ function CreateNewContent(props: PROPS) {
 
     const result = await chatSession.sendMessage(FinalAIPrompt)
 
-    console.log(result.response.text());
     setAiOutput(result?.response.text())
+    await SaveInDb(formData, selectedTemplate?.slug,result?.response.text())
     setLoading(false)
+  }
+
+  const SaveInDb=async(formData:any, slug:any, aiResp:string)=>{
+    const result= await db.insert(AIOutput).values({
+      formData:formData,
+      templateSlug:slug,
+      aiResponse:aiResp,
+      createdBy:user?.primaryEmailAddress?.emailAddress,
+      createdAt:moment().format('DD/MM/yyyy'),
+    })
+    console.log(result)
   }
 
   return (
