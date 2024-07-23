@@ -1,8 +1,10 @@
 "use client"
 import { TotalUsageContext } from '@/app/(context)/TotalUsageContext'
+import { UpdateCreditUsageContext } from '@/app/(context)/UpdateCreditUsageContext'
+import { UserSubscriptionContext } from '@/app/(context)/UserSubscriptionContext'
 import { Button } from '@/components/ui/button'
 import { db } from '@/utils/db'
-import { AIOutput } from '@/utils/schema'
+import { AIOutput, UserSubscription } from '@/utils/schema'
 import { useUser } from '@clerk/nextjs'
 
 import { eq } from 'drizzle-orm'
@@ -11,11 +13,18 @@ import React, { useContext, useEffect, useState } from 'react'
 function UsageTrack() {
     const {user} = useUser()
     const {totalUsage,setTotalUsage} = useContext(TotalUsageContext)
-
+    const {userSubscription, setUserSubscription} = useContext(UserSubscriptionContext)
+    const [maxWords, setMaxWords] = useState(10000)
+    const {updateCreditUsage, setUpdateCreditUsage} = useContext(UpdateCreditUsageContext)
 
     useEffect(()=>{
         user&&GetData();
-    },[user])
+        user&&IsUserSubscribe();
+    },[user]);
+
+    useEffect(()=>{
+      user&&GetData();
+    },[updateCreditUsage&&user])
 
     const GetData = async()=>{
         {/* @ts-ignore */}
@@ -23,6 +32,16 @@ function UsageTrack() {
 
         GetTotalUsage(result)
 
+    }
+
+    const IsUserSubscribe = async ()=>{
+      const result = await db.select().from(UserSubscription)
+      .where(eq(UserSubscription.email,user?.primaryEmailAddress?.emailAddress));
+
+      if(result){
+        setUserSubscription(true);
+        setMaxWords(100000)
+      }
     }
 
     const GetTotalUsage = (result:History[]) =>{
@@ -38,9 +57,9 @@ function UsageTrack() {
       <div className='bg-primary text-white rounded-lg p-3'>
         <h2 className='font-medium'>Credits</h2>
         <div className='h-2 bg-slate-600 w-full rounded-full mt-3'>
-            <div className='h-2 bg-white rounded-full' style={{width:(totalUsage/10000)*100+"%"}}></div>
+            <div className='h-2 bg-white rounded-full' style={{width:(totalUsage/maxWords)*100+"%"}}></div>
         </div>
-        <h2 className='text-sm my-2'>{totalUsage}/10,000 credit used</h2>
+        <h2 className='text-sm my-2'>{totalUsage}/{maxWords} credit used</h2>
       </div>
       <Button variant={'secondary'} className='w-full my-3 text-primary'>Upgrade</Button>
     </div>

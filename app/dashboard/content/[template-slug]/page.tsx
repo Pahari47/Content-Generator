@@ -14,6 +14,9 @@ import { useUser } from '@clerk/nextjs'
 import moment from 'moment'
 import { TotalUsageContext } from '@/app/(context)/TotalUsageContext'
 import { useRouter } from 'next/navigation'
+import { UserSubscriptionContext } from '@/app/(context)/UserSubscriptionContext'
+import { param } from 'drizzle-orm'
+import { UpdateCreditUsageContext } from '@/app/(context)/UpdateCreditUsageContext'
 
 interface PROPS {
   params: {
@@ -28,11 +31,18 @@ function CreateNewContent(props: PROPS) {
   const [aiOutput, setAiOutput] = useState<string>('')
   const {user} = useUser()
   const router = useRouter()
+  const {userSubscription, setUserSubscription} = useContext(UserSubscriptionContext)
   const {totalUsage,setTotalUsage} = useContext(TotalUsageContext)
+  const {updateCreditUsage, setUpdateCreditUsage} = useContext(UpdateCreditUsageContext)
 
+  /**
+   * Used to generate content from AI
+   * @param FormData
+   * @returns
+   */
 
   const generateAIContent = async (formData: any) => {
-    if(totalUsage>=10000){
+    if(totalUsage>=10000&&!userSubscription){
       console.log("Please Upgrade")
       router.push('/dashboard/billing')
       return ;
@@ -47,6 +57,8 @@ function CreateNewContent(props: PROPS) {
     setAiOutput(result?.response.text())
     await SaveInDb(formData, selectedTemplate?.slug,result?.response.text())
     setLoading(false)
+
+    setUpdateCreditUsage(Date.now())
   }
 
   const SaveInDb=async(formData:any, slug:any, aiResp:string)=>{
