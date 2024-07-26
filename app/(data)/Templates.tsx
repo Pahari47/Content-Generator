@@ -98,5 +98,123 @@ export default [
                 name:'outline'
             }
         ]
+    },
+    {
+        name:'Add Emojis to Text',
+        desc:'An AI tool that serves as your personal blog post title and description given.',
+        category:'blog',
+        icon:'https://cdn-icons-png.flaticon.com/128/1231/1231448.png',
+        slug:'add-emoji-to-text',
+        aiPrompt:'Add Emoji to outline text depends on outline and reaction.',
+        form:[
+            {
+                label:'Enter your text to add emojis',
+                field:'textarea',
+                name:'outline',
+                required:true
+            }
+        ]
+    },
+    {
+        name:'Text Improver',
+        desc:'This handy tool refines your writing, eliminating error in grammar.',
+        category:'Writing Assistant',
+        icon:'https://cdn-icons-png.flaticon.com/128/3815/3815460.png',
+        slug:'text-improver',
+        aiPrompt:'Given textToImprove, Rewrite text without any grammar mistake.',
+        form:[
+            {
+                label:'Enter text that you want to re-write or improve',
+                field:'textarea',
+                name:'textToImprove',
+                required:true
+            }
+        ]
+    },
+    {
+        name:'Youtube Tags',
+        desc:'An AI tool that service as your personal blog post title and description given.',
+        category:'Youtube Tool',
+        icon:'https://cdn-icons-png.flaticon.com/128/16973/16973282.png',
+        slug:'youtube-tag',
+        aiPrompt:'Generate 10 Youtube tags in bullet point based on the given description.',
+        form:[
+            {
+                label:'Enter your blog title',
+                field:'input',
+                name:'title',
+                required:true
+            },
+            {
+                label:'Enter youtube Outline here (Optional)',
+                field:'textarea',
+                name:'outline'
+            }
+        ]
+    },
+    {
+        name:'Rewrite Article (plagrism Free)',
+        desc:'Use this to rewrite existing Article or Blog Post.',
+        category:'Rewriting Tool',
+        icon:'https://cdn-icons-png.flaticon.com/128/4998/4998181.png',
+        slug:'rewrite-article',
+        aiPrompt:'Rewrite give article without any plagiarism in rich text editor format',
+        form:[
+            {
+                label:'Provide your Article/Blogpost or any other content',
+                field:'textarea',
+                name:'article',
+                required:true
+            }
+        ]
+    },
+    {
+        name:'Instagram Post Generator',
+        desc:'An AI tool that service as your personal blog post title and description given.',
+        category:'blog',
+        icon:'https://cdn-icons-png.flaticon.com/128/2111/2111463.png',
+        slug:'instagram-post-generator',
+        aiPrompt:'Generate 3 Instagram post depends on a given keywords.',
+        form:[
+            {
+                label:'Enter Keywords for your post',
+                field:'input',
+                name:'keywords',
+                required:true
+            }
+        ]
+    },
+    {
+        name:'Code Generator',
+        desc:'Use this to Generate programme as your given desc',
+        category:'programming',
+        icon:'https://cdn-icons-png.flaticon.com/128/17030/17030855.png',
+        slug:'programme-generator',
+        aiPrompt:'Generate programme depends on given keywords',
+        form:[
+            {
+                label:'Enter keywords for your code',
+                field:'input',
+                name:'keywords',
+                required:true
+            }
+        ]
+    },
+    {
+        name:'Code Explainer',
+        desc:'Use this to Explain programme as your given desc',
+        category:'programming',
+        icon:'https://cdn-icons-png.flaticon.com/128/10061/10061911.png',
+        slug:'programme-Explainer',
+        aiPrompt:'Generate Explanation of given programme',
+        form:[
+            {
+                label:'Enter your code',
+                field:'textarea',
+                name:'programming',
+                required:true
+            }
+        ]
     }
+    
 ]
