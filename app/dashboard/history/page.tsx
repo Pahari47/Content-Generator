@@ -2,11 +2,14 @@
 import React, { useEffect, useState } from 'react';
 import { db } from '@/utils/db';
 import { AIOutput } from '@/utils/schema';
+import { useUser } from '@clerk/nextjs';
 
 function History() {
+    const user = useUser()
     const [historyData, setHistoryData] = useState<any>([]);
 
     useEffect(() => {
+        user&&GetData();
         const fetchData = async () => {
             try {
                 const data = await db.select().from(AIOutput);
@@ -18,6 +21,11 @@ function History() {
 
         fetchData();
     }, []);
+    const GetData = async()=>{
+        {/* @ts-ignore */}
+        const result:History[] = await db.select().from(AIOutput).where(eq(AIOutput.createdBy,user?.primaryEmailAddress?.emailAddress))
+
+    }
 
     return (
         <div>
