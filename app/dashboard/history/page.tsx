@@ -21,6 +21,7 @@ function History() {
 
     return (
         <div>
+            {/* @ts-ignore */}
             {historyData.map((item, index) => (
                 <div className='m-4 grid gap-4 grid-cols-10' key={index}>
                     <div className='min-h-[100px] rounded-lg bg-transparent border-blue-500 shadow col-span-2'>
