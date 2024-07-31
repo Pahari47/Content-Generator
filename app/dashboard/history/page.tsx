@@ -3,16 +3,17 @@ import React, { useEffect, useState } from 'react';
 import { db } from '@/utils/db';
 import { AIOutput } from '@/utils/schema';
 import { useUser } from '@clerk/nextjs';
+import { eq } from 'drizzle-orm';
 
 function History() {
-    const user = useUser()
+    const {user} = useUser()
     const [historyData, setHistoryData] = useState<any>([]);
 
     useEffect(() => {
-        user&&GetData();
         const fetchData = async () => {
             try {
-                const data = await db.select().from(AIOutput);
+                {/* @ts-ignore */}
+                const data = await db.select().from(AIOutput).where(eq(AIOutput.createdBy,user?.primaryEmailAddress?.emailAddress));
                 setHistoryData(data);
             } catch (error) {
                 console.error('Error fetching history data:', error);
@@ -20,12 +21,8 @@ function History() {
         };
 
         fetchData();
-    }, []);
-    const GetData = async()=>{
-        {/* @ts-ignore */}
-        const result:History[] = await db.select().from(AIOutput).where(eq(AIOutput.createdBy,user?.primaryEmailAddress?.emailAddress))
+    }, [user]);
 
-    }
 
     return (
         <div>
