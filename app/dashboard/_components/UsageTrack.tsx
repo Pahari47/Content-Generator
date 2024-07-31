@@ -47,6 +47,7 @@ function UsageTrack() {
     const GetTotalUsage = (result:History[]) =>{
         let total:number = 0;
         result.forEach(element =>{
+          {/* @ts-ignore */}
             total = total+Number(element.aiResponse?.length) 
         })
         setTotalUsage(total)
