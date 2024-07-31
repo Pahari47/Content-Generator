@@ -28,7 +28,7 @@ export default function Home() {
         <p className="w-[50vw] text-center">Revolutionize your content creation with our AI-powerd app, delivering engaging and high quality text in seconds.</p>
       </div>
       <div className="flex justify-center items-center mt-6">
-        <Button onClick={handleButtonClick}>Get Started ></Button>
+        <Button onClick={handleButtonClick}>Get Started</Button>
       </div>
       <div className="flex justify-center items-center mt-11 gap-7 text-fuchsia-900">
         <a href="https://github.com/Pahari47"><Github/></a>
